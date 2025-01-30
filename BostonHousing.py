@@ -44,8 +44,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-# Instrucciones para despliegue en GitHub Pages o Streamlit Cloud
-st.write("### Instrucciones para ejecución en GitHub")
-st.markdown("1. Sube este archivo a un repositorio de GitHub.\n" 
-            "2. Asegúrate de incluir el archivo `model_trained_regressor.pkl`.\n"
-            "3. Despliega en [Streamlit Community Cloud](https://streamlit.io/cloud) enlazando tu repo.")
