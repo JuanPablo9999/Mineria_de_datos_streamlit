@@ -3,8 +3,13 @@ import numpy as np
 import pickle  # Asegúrate de tener tu modelo guardado en un archivo pickle
 
 # Cargar el modelo entrenado
-with open("model_trained_regressor.pkl", "rb") as file:
-    model = pickle.load(file)
+MODEL_PATH = "model_trained_regressor.pkl"
+
+def load_model():
+    with open(MODEL_PATH, "rb") as file:
+        return pickle.load(file)
+
+model = load_model()
 
 # Definir las 13 características del conjunto de datos Boston Housing
 features = [
@@ -39,3 +44,9 @@ if st.button("Predecir Precio"):
     predicted_price = model.predict(input_array)[0]
     
     st.success(f"El precio estimado de la casa es: ${predicted_price * 1000:,.2f}")
+
+# Instrucciones para despliegue en GitHub Pages o Streamlit Cloud
+st.write("### Instrucciones para ejecución en GitHub")
+st.markdown("1. Sube este archivo a un repositorio de GitHub.\n" 
+            "2. Asegúrate de incluir el archivo `model_trained_regressor.pkl`.\n"
+            "3. Despliega en [Streamlit Community Cloud](https://streamlit.io/cloud) enlazando tu repo.")
