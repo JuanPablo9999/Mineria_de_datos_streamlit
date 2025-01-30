@@ -1,50 +1,49 @@
 import streamlit as st
-import numpy as np
-import pickle  # Asegúrate de tener tu modelo guardado en un archivo pickle
+import pickle
+import gzip
 
-# Cargar el modelo entrenado
-MODEL_PATH = "model_trained_regressor.pkl"
-
+# Función para cargar el modelo
 def load_model():
-    with open(MODEL_PATH, "rb") as file:
-        return pickle.load(file)
+    """Cargar el modelo y sus pesos desde el archivo model_weights.pkl."""
+    filename = 'model_trained_regressor.pkl.gz'
+    with gzip.open(filename, 'rb') as f:
+        model = pickle.load(f)
+    return model
 
-model = load_model()
 
-# Definir las 13 características del conjunto de datos Boston Housing
-features = [
-    "CRIM - Tasa de criminalidad por zona",
-    "ZN - Proporción de terrenos residenciales grandes",
-    "INDUS - Proporción de acres comerciales por ciudad",
-    "CHAS - Variable ficticia del río Charles (1 si está cerca, 0 si no)",
-    "NOX - Concentración de óxidos de nitrógeno",
-    "RM - Número medio de habitaciones por vivienda",
-    "AGE - Proporción de unidades construidas antes de 1940",
-    "DIS - Distancia ponderada a cinco centros de empleo de Boston",
-    "RAD - Índice de accesibilidad a carreteras radiales",
-    "TAX - Tasa de impuesto a la propiedad",
-    "PTRATIO - Relación alumno-profesor por ciudad",
-    "B - Proporción de personas de raza negra por ciudad",
-    "LSTAT - Porcentaje de población con estatus socioeconómico bajo",
-]
+# Función principal
+def main():
+    st.title("Predicción de Precios de Viviendas en Boston")
+    st.write("Introduce las características de la casa para predecir su precio.")
 
-st.title("Predicción del Precio de una Casa en Boston")
-st.write("Ingrese los valores para cada característica:")
+    # Campos de entrada para las características
+    crim = st.number_input("Tasa de criminalidad per cápita por ciudad (CRIM)")
+    zn = st.number_input("Proporción de terreno residencial zonificado para lotes de más de 25,000 pies cuadrados (ZN)")
+    indus = st.number_input("Proporción de acres de negocios no minoristas por ciudad (INDUS)")
+    chas = st.number_input("Variable ficticia Charles River (1 si el tramo limita con el río; 0 en caso contrario) (CHAS)")
+    nox = st.number_input("Concentración de óxidos de nitrógeno (partes por 10 millones) (NOX)")
+    rm = st.number_input("Número promedio de habitaciones por vivienda (RM)")
+    age = st.number_input("Proporción de unidades ocupadas por el propietario construidas antes de 1940 (AGE)")
+    dis = st.number_input("Distancias ponderadas a cinco centros de empleo de Boston (DIS)")
+    rad = st.number_input("Índice de accesibilidad a autopistas radiales (RAD)")
+    tax = st.number_input("Tasa de impuesto sobre la propiedad de valor total por $10,000 (TAX)")
+    ptratio = st.number_input("Proporción alumno-maestro por ciudad (PTRATIO)")
+    b = st.number_input("1000(Bk - 0.63)^2 donde Bk es la proporción de personas de ascendencia afroamericana por ciudad (B)")
+    lstat = st.number_input("Porcentaje de población de estatus bajo (LSTAT)")
 
-# Crear entradas para las 13 características
-input_data = []
-for feature in features:
-    value = st.number_input(feature, value=0.0)
-    input_data.append(value)
+    # Botón para realizar la predicción
+    if st.button("Predecir Precio"):
+        model = load_model()
+        features = [[crim, zn, indus, chas, nox, rm, age, dis, rad, tax, ptratio, b, lstat]]
+        prediction = model.predict(features)
+        st.success(f"El precio predicho de la casa es: ${prediction[0]:,.2f}")
 
-# Botón para predecir
-if st.button("Predecir Precio"):
-    # Convertir la entrada en un array numpy y hacer la predicción
-    input_array = np.array(input_data).reshape(1, -1)
-    predicted_price = model.predict(input_array)[0]
-    
-    st.success(f"El precio estimado de la casa es: ${predicted_price * 1000:,.2f}")
+        # Mostrar hiperparámetros del mejor modelo
+        st.write("Hiperparámetros del mejor modelo:")
+        st.write(model.get_params())
 
+if __name__ == "__main__":
+    main()
 # Instrucciones para despliegue en GitHub Pages o Streamlit Cloud
 st.write("### Instrucciones para ejecución en GitHub")
 st.markdown("1. Sube este archivo a un repositorio de GitHub.\n" 
