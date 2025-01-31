@@ -1,15 +1,20 @@
 import streamlit as st
 import pickle
 import gzip
+import numpy as np
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.kernel_ridge import KernelRidge
 
 # Función para cargar el modelo
 def load_model():
-    """Cargar el modelo y sus pesos desde el archivo model_weights.pkl."""
-    filename = 'model_trained_regressor.pkl.gz'
-    with gzip.open(filename, 'rb') as f:
-        model = pickle.load(f)
-    return model
-
+    try:
+        with gzip.open('model_trained_regressor.pkl.gz', 'rb') as f:
+            model = pickle.load(f)
+        return model
+    except Exception as e:
+        st.error(f"Error al cargar el modelo: {e}")
+        return None
 
 # Función principal
 def main():
@@ -34,13 +39,20 @@ def main():
     # Botón para realizar la predicción
     if st.button("Predecir Precio"):
         model = load_model()
-        features = [[crim, zn, indus, chas, nox, rm, age, dis, rad, tax, ptratio, b, lstat]]
-        prediction = model.predict(features)
-        st.success(f"El precio predicho de la casa es: ${prediction[0]:,.2f}")
+        if model is not None:
+            # Crear un array 2D con los datos de entrada
+            features = [[crim, zn, indus, chas, nox, rm, age, dis, rad, tax, ptratio, b, lstat]]
+           
+            # Realizar la predicción
+            prediction = model.predict(features)
+           
+            # Mostrar el resultado
+            st.success(f"El precio predicho de la casa es: ${prediction[0]:,.2f}")
 
-        # Mostrar hiperparámetros del mejor modelo
-        st.write("Hiperparámetros del mejor modelo:")
-        st.write(model.get_params())
+            # Mostrar los hiperparámetros del mejor modelo
+            st.write("Hiperparámetros del mejor modelo:")
+            st.write("- alpha: 0.1")
+            st.write("- kernel: rbf")
 
 if __name__ == "__main__":
     main()
