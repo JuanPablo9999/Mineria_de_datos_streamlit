@@ -62,7 +62,10 @@ def main():
                 **Hiperparámetros del modelo:**
                 - 🔹 alpha: 0.1  
                 - 🔹 kernel: rbf
-                # Importar librerías necesarias
+
+            """)
+
+           # Importar librerías necesarias
 import streamlit as st
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
@@ -110,7 +113,7 @@ model.set_params(
     reg__degree=3
 )
 
-            """)
+
 
 if __name__ == "__main__":
     main()
