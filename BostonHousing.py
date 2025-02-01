@@ -85,6 +85,9 @@ model.set_params(
 
 
 
+
+
+
     
     # Sección de entrada de datos con mejor visualización
     st.subheader("Características de la vivienda")
