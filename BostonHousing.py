@@ -31,63 +31,6 @@ def main():
    
     # Imagen de una casa
     st.image("house.jpg", use_container_width=True, caption="Ejemplo de Vivienda")
-
-# Importar librerías necesarias
-import streamlit as st
-from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import StandardScaler
-from sklearn.kernel_ridge import KernelRidge
-
-# Definir el pipeline del modelo
-model = Pipeline([
-    ('scaler', StandardScaler()),  # Escalado de datos para mejorar estabilidad numérica
-    ('reg', KernelRidge(alpha=0.1, kernel='rbf'))  # Regresión de cresta con kernel RBF
-])
-
-# Descripción de los hiperparámetros del modelo
-st.write("### Hiperparámetros del Modelo")
-st.markdown("""
-- **Centrado de datos (`scaler__with_mean`)**: True  
-  - Indica si se resta la media a cada característica antes de escalar.
-
-- **Escalado por desviación estándar (`scaler__with_std`)**: True  
-  - Determina si se dividen los datos por su desviación estándar.
-
-- **Parámetro de regularización (`reg__alpha`)**: 0.1  
-  - Controla la penalización en la regresión ridge. Valores altos reducen la varianza pero aumentan el sesgo.
-
-- **Tipo de kernel (`reg__kernel`)**: RBF  
-  - Define la función de transformación de los datos. En este caso, usa la función base radial.
-
-- **Parámetro gamma (`reg__gamma`)**: None  
-  - Si es `None`, se calcula automáticamente como `1/n_features`.
-
-- **Coeficiente (`reg__coef0`)**: 1  
-  - Usado en ciertos kernels como 'poly' y 'sigmoid', pero no afecta a 'rbf'.
-
-- **Grado del polinomio (`reg__degree`)**: 3  
-  - Solo relevante para kernels polinomiales, no tiene impacto en RBF.
-""")
-
-# Asignar hiperparámetros al modelo
-model.set_params(
-    scaler__with_mean=True,
-    scaler__with_std=True,
-    reg__alpha=0.1,
-    reg__kernel='rbf',
-    reg__gamma=None,
-    reg__coef0=1,
-    reg__degree=3
-)
-
-
-
-
-
-
-
-
-
     
     # Sección de entrada de datos con mejor visualización
     st.subheader("Características de la vivienda")
