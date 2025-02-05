@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import matplotlib as plt
+
 import os
 
 st.title("Visualizador de Datos del Notebook")
