@@ -1,68 +1,44 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
 
-import os
+st.title("Análisis de Detección de Ocupación")
 
-st.title("Visualizador de Datos del Notebook")
+# Cargar los datos
+def load_data():
+    df_train = pd.read_csv("/kaggle/input/occupancy-detection/datatrain.csv")
+    df_test = pd.read_csv("/kaggle/input/occupancy-detection/datatest.csv")
+    df = pd.concat([df_train, df_test], axis=0)
+    df["date"] = pd.to_datetime(df["date"])
+    return df
 
-# Listar archivos en el directorio de entrada
-st.header("Archivos disponibles")
-input_dir = "./input"  # Ajusta la ruta según sea necesario
-if os.path.exists(input_dir):
-    files = os.listdir(input_dir)
-    if files:
-        st.write(files)
-    else:
-        st.write("No hay archivos en el directorio de entrada.")
-else:
-    st.write("El directorio de entrada no existe.")
+df = load_data()
 
-# Cargar y mostrar un archivo CSV si está disponible
-st.header("Carga y vista previa de datos")
-uploaded_file = st.file_uploader("Sube un archivo CSV", type=["csv"])
+st.subheader("Vista previa de los datos")
+st.write(df.head())
 
-if uploaded_file is not None:
-    df = pd.read_csv(uploaded_file)
-    st.write(df.head())
-    
-    # Mostrar estadísticas básicas
-    st.subheader("Estadísticas básicas")
-    st.write(df.describe())
-    
-    # Generar gráfico si hay columnas numéricas
-    st.subheader("Gráficos de datos")
-    numeric_columns = df.select_dtypes(include=[np.number]).columns.tolist()
-    if numeric_columns:
-        selected_column = st.selectbox("Selecciona una columna para graficar", numeric_columns)
-        fig, ax = plt.subplots()
-        df[selected_column].hist(ax=ax, bins=20)
-        st.pyplot(fig)
-    else:
-        st.write("No hay columnas numéricas para graficar.")
+# Mostrar información del dataset
+if st.checkbox("Mostrar información del dataset"):
+    st.write(df.info())
 
-    # Análisis adicional basado en el código del notebook
-    st.subheader("Análisis Adicional")
-    st.write("Cantidad de valores nulos en el dataset:")
-    st.write(df.isnull().sum())
-    
-    # Generar una matriz de correlación si hay más de una columna numérica
-    if len(numeric_columns) > 1:
-        st.subheader("Matriz de correlación")
-        fig, ax = plt.subplots()
-        cax = ax.matshow(df[numeric_columns].corr(), cmap='coolwarm')
-        plt.colorbar(cax)
-        st.pyplot(fig)
-    
-    # Gráfico de dispersión entre dos columnas numéricas
-    if len(numeric_columns) > 1:
-        st.subheader("Gráfico de dispersión")
-        col1, col2 = st.selectbox("Selecciona la primera columna", numeric_columns), st.selectbox("Selecciona la segunda columna", numeric_columns)
-        if col1 and col2 and col1 != col2:
-            fig, ax = plt.subplots()
-            ax.scatter(df[col1], df[col2], alpha=0.5)
-            ax.set_xlabel(col1)
-            ax.set_ylabel(col2)
-            st.pyplot(fig)
-        else:
-            st.write("Selecciona dos columnas diferentes para el gráfico de dispersión.")
+# Visualización de correlaciones
+st.subheader("Mapa de calor de correlaciones")
+fig, ax = plt.subplots(figsize=(10, 5))
+sns.heatmap(df.corr(), vmin=-1, vmax=1, cmap="coolwarm", annot=True, ax=ax)
+st.pyplot(fig)
+
+# Distribución de la variable objetivo
+st.subheader("Distribución de la variable objetivo")
+fig, ax = plt.subplots()
+sns.countplot(x=df["Occupancy"], ax=ax)
+st.pyplot(fig)
+
+# Gráfico de dispersión
+st.subheader("Relación entre CO2 y Humedad")
+fig, ax = plt.subplots()
+sns.scatterplot(data=df, x="CO2", y="Humidity", hue="Occupancy", ax=ax)
+st.pyplot(fig)
+
+st.write("Este es un análisis inicial, se pueden agregar modelos predictivos y más visualizaciones interactivas.")
+
