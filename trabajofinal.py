@@ -7,8 +7,8 @@ st.title("Análisis de Detección de Ocupación")
 
 # Cargar los datos
 def load_data():
-    df_train = pd.read_csv("/kaggle/input/occupancy-detection/datatrain.csv")
-    df_test = pd.read_csv("/kaggle/input/occupancy-detection/datatest.csv")
+    df_train = pd.read_csv("https://raw.githubusercontent.com/JuanPablo9999/Mineria_de_datos_streamlit/main/datatrain.csv")
+    df_test = pd.read_csv("https://raw.githubusercontent.com/JuanPablo9999/Mineria_de_datos_streamlit/main/datatest.csv")
     df = pd.concat([df_train, df_test], axis=0)
     df["date"] = pd.to_datetime(df["date"])
     return df
