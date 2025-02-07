@@ -6,6 +6,7 @@ import tensorflow as tf
 from tensorflow.keras.preprocessing.image import img_to_array
 import gzip
 import pickle
+import pandas as pd
 
 # Crear un directorio para guardar las imágenes si no existe
 UPLOAD_FOLDER = "uploaded_images"
@@ -102,6 +103,27 @@ def main():
 
     # Footer
     st.markdown('<div class="footer">© 2025 - Clasificación de imágenes con Streamlit</div>', unsafe_allow_html=True)
+
+
+# Hiperparámetros del modelo
+hyperparameters = {
+    "n_neighbors": 4,
+    "p": 3,
+    "algorithm": "auto",
+    "leaf_size": 30,
+    "metric": "minkowski",
+    "weights": "uniform"
+}
+
+st.title("Hiperparámetros del Modelo KNeighborsClassifier")
+
+st.write("Este modelo es un clasificador K-Nearest Neighbors dentro de un Pipeline.")
+
+# Mostrar los hiperparámetros en una tabla
+df = pd.DataFrame(list(hyperparameters.items()), columns=["Hiperparámetro", "Valor"])
+st.dataframe(df, use_container_width=True)
+
+
 
 if __name__ == "__main__":
     main()
