@@ -115,7 +115,9 @@ hyperparameters = {
     "weights": "uniform"
 }
 
-st.title("Hiperparámetros del Modelo KNeighborsClassifier")
+st.title("Clasificación de dígitos con un modelo KNeighborsClassifier")
+
+st.write("Hiperparámetros del Modelo KNeighborsClassifier")
 
 st.write("Este modelo es un clasificador K-Nearest Neighbors dentro de un Pipeline.")
 
