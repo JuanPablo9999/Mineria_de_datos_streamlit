@@ -6,3 +6,4 @@ matplotlib
 streamlit
 xgboost
 accuracy
+shap
