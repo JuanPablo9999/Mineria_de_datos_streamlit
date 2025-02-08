@@ -13,6 +13,7 @@ from xgboost import XGBClassifier
 from sklearn.metrics import accuracy_score, f1_score, recall_score, precision_score
 import gzip
 import pickle
+from sklearn.metrics import accuracy_score
 
 # Mostrar la imagen solo en la página de inicio
 st.title("Análisis de Detección de Ocupación")
