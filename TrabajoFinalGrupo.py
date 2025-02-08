@@ -14,6 +14,10 @@ from sklearn.metrics import accuracy_score, f1_score, recall_score, precision_sc
 import gzip
 import pickle
 from sklearn.metrics import accuracy_score
+import matplotlib.pyplot as plt
+import shap
+
+
 
 # Mostrar la imagen solo en la página de inicio
 st.title("Análisis de Detección de Ocupación")
@@ -212,29 +216,64 @@ elif seccion == "Modelo XGBoost":
         return model
     model=load_model()
 
-        # Configuración de la interfaz en Streamlit
-    st.title("Predicción con Modelo XGBoost")
-    
-        # Mostrar los mejores hiperparámetros
-    #st.subheader("Mejores Hiperparámetros del Modelo")
-    #st.write(best_params)
-        
+#     # Configuración de la interfaz en Streamlit
+ #   st.title("Predicción con Modelo XGBoost")
+            
         # Entrada manual de valores
-    st.subheader("Ingrese los valores para la predicción")
-    n_features = 9#model.get_booster().num_features()
-    user_input = []
-    for i in range(n_features):
-        value = st.number_input(f"Característica {i+1}", value=0.0)
-        user_input.append(value)
+  #  st.subheader("Ingrese los valores para la predicción")
+   # n_features = 9#model.get_booster().num_features()
+    #user_input = []
+    #for i in range(n_features):
+     #   value = st.number_input(f"Característica {i+1}", value=0.0)
+      #  user_input.append(value)
         
-        # Convertir entrada a array numpy
-    input_array = np.array(user_input).reshape(1, -1)
+       # # Convertir entrada a array numpy
+    #input_array = np.array(user_input).reshape(1, -1)
         
-        # Realizar predicción si el usuario lo solicita
-    if st.button("Predecir"):
-        prediction = model.predict(input_array)[0]
-        st.subheader("Resultado de la Predicción")
-        st.write(f"Predicción del modelo: {prediction}")
+     #   # Realizar predicción si el usuario lo solicita
+    #if st.button("Predecir"):
+     #   prediction = model.predict(input_array)[0]
+      #  st.subheader("Resultado de la Predicción")
+       # st.write(f"Predicción del modelo: {prediction}")
+
+    st.write("Vista previa de los datos cargados:")
+    st.dataframe(X_test.head())
+    
+    # Realizar predicciones
+    y_pred = xgb_model.predict(X_test)
+    st.write("Predicciones:")
+    st.dataframe(pd.DataFrame({"Predicción": y_pred}))
+    
+    # Calcular métricas
+    accuracy = accuracy_score(y_test, y_pred)
+    f1 = f1_score(y_test, y_pred)
+    recall = recall_score(y_test, y_pred)
+    precision = precision_score(y_test, y_pred)
+    
+    st.write("### Métricas de Evaluación")
+    st.write(f"**Accuracy:** {accuracy:.4f}")
+    st.write(f"**F1 Score:** {f1:.4f}")
+    st.write(f"**Recall Score:** {recall:.4f}")
+    st.write(f"**Precision Score:** {precision:.4f}")
+    
+    # Importancia de las características
+    if hasattr(xgb_model, "feature_importances_"):
+        feat_importances = pd.Series(xgb_model.feature_importances_, index=X_test.columns).sort_values()
+        fig, ax = plt.subplots()
+        feat_importances.plot(kind='barh', ax=ax)
+        ax.set_title("Feature Importance Graph")
+        ax.set_xlabel("Importances")
+        ax.set_ylabel("Features")
+        st.pyplot(fig)
+    
+    # Explicabilidad con SHAP
+    explainer = shap.Explainer(xgb_model)
+    shap_values = explainer(X_test)
+    st.write("### Explicabilidad con SHAP")
+    fig, ax = plt.subplots()
+    shap.summary_plot(shap_values, X_test, show=False)
+    st.pyplot(fig)
+
 
 
 
