@@ -210,14 +210,7 @@ elif seccion == "Modelo XGBoost":
             model = pickle.load(f)
         return model
     model=load_model()
-    # Cargar el modelo desde el archivo comprimido
 
-     # Obtener los mejores hiperparámetros (si el modelo fue ajustado con búsqueda de hiperparámetros)
-    #if hasattr(model, "best_params_"):
-    #    best_params = model.best_params_
-    #else:
-     #   best_params = "No se encontraron hiperparámetros óptimos en el modelo."
-        
         # Configuración de la interfaz en Streamlit
     st.title("Predicción con Modelo XGBoost")
     
@@ -251,17 +244,13 @@ elif seccion == "Modelo de redes neuronales":
         """Cargar el modelo y sus pesos desde el archivo model_weights.pkl."""
         filename = 'best_model.pkl.gz'
         with gzip.open(filename, 'rb') as f:
-            model = pickle.load(f)
+            model2 = pickle.load(f)
         return model
-    model=load_model()
-    model.compile(loss='binary_crossentropy', optimizer=Adam(), metrics=['accuracy'])
+    model2=load_model()
+    model2.compile(loss='binary_crossentropy', optimizer=Adam(), metrics=['accuracy'])
 
     
-    # Obtención del historial de entrenamiento
-    accuracy = clf.history['accuracy']
-    loss = clf.history['loss']
-
-    # Gráficos de Accuracy y Loss
+       # Gráficos de Accuracy y Loss
     fig, axes = plt.subplots(1, 2, figsize=(10, 3))
     sns.lineplot(y=accuracy, x=range(1, len(accuracy) + 1), marker='o', ax=axes[0])
     sns.lineplot(y=loss, x=range(1, len(loss) + 1), marker='o', ax=axes[1])
