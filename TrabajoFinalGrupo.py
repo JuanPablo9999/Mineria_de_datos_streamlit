@@ -238,7 +238,7 @@ elif seccion == "Modelo XGBoost":
 
        
     # Realizar predicciones
-    y_pred = xgb_model.predict(X_test)
+    y_pred = model.predict(X_test)
     st.write("Predicciones:")
     st.dataframe(pd.DataFrame({"Predicción": y_pred}))
     
@@ -255,7 +255,7 @@ elif seccion == "Modelo XGBoost":
     st.write(f"**Precision Score:** {precision:.4f}")
     
     # Importancia de las características
-    if hasattr(xgb_model, "feature_importances_"):
+    if hasattr(model, "feature_importances_"):
         feat_importances = pd.Series(xgb_model.feature_importances_, index=X_test.columns).sort_values()
         fig, ax = plt.subplots()
         feat_importances.plot(kind='barh', ax=ax)
