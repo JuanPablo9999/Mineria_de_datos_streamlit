@@ -236,9 +236,7 @@ elif seccion == "Modelo XGBoost":
       #  st.subheader("Resultado de la Predicción")
        # st.write(f"Predicción del modelo: {prediction}")
 
-    st.write("Vista previa de los datos cargados:")
-    st.dataframe(X_test.head())
-    
+       
     # Realizar predicciones
     y_pred = xgb_model.predict(X_test)
     st.write("Predicciones:")
