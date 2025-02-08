@@ -245,7 +245,7 @@ elif seccion == "Modelo de redes neuronales":
         filename = 'best_model.pkl.gz'
         with gzip.open(filename, 'rb') as f:
             model2 = pickle.load(f)
-        return model
+        return model2
     model2=load_model()
     model2.compile(loss='binary_crossentropy', optimizer=Adam(), metrics=['accuracy'])
 
