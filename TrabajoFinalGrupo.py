@@ -134,7 +134,7 @@ elif seccion == "Mapa de calor de correlaciones":
 
 elif seccion == "Boxplots":
     st.subheader("Conjunto de boxplots")
-    st.image("Boxplots.jpeg", use_container_width=True)
+    st.image("Boxplots.jpg", use_container_width=True)
     st.write("""
     ### Análisis de Variables
 
@@ -251,7 +251,7 @@ elif seccion == "Modelo de redes neuronales":
     model2.compile(loss='binary_crossentropy', optimizer=Adam(), metrics=['accuracy'])
 
     
-       # Gráficos de Accuracy y Loss
+    # Gráficos de Accuracy y Loss
     fig, axes = plt.subplots(1, 2, figsize=(10, 3))
     sns.lineplot(y=accuracy, x=range(1, len(accuracy) + 1), marker='o', ax=axes[0])
     sns.lineplot(y=loss, x=range(1, len(loss) + 1), marker='o', ax=axes[1])
