@@ -4,7 +4,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import MinMaxScaler,StandardScaler
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.optimizers import Adam
@@ -18,6 +18,7 @@ import matplotlib.pyplot as plt
 import shap
 import xgboost as xgb
 
+scaler = StandardScaler()
 
 # Mostrar la imagen solo en la página de inicio
 st.title("Análisis de Detección de Ocupación")
