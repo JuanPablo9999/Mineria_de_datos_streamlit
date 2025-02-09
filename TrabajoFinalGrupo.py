@@ -35,11 +35,12 @@ seccion = st.sidebar.radio("Tabla de Contenidos",
                             "Mapa de calor de correlaciones", 
                             "Distribución de la variable objetivo", 
                             "Boxplots", 
-                            "Modelo RandomForest",  # Nueva sección
-                           "Modelo de redes neuronales",
-                           "Conclusión: Selección del Mejor Modelo"])
+                            "Conclusión: Selección del Mejor Modelo",  # Nueva ubicación
+                            "Modelo XGBoost",  # Nueva sección
+                            "Entrenamiento del Modelo MLP", 
+                            "Hacer una Predicción",
+                           "Modelo de redes neuronales"])
 
-# Cargar los datos
 # Cargar los datos
 def load_data():
     df_train = pd.read_csv("https://raw.githubusercontent.com/JuanPablo9999/Mineria_de_datos_streamlit/main/datatrain.csv")
@@ -57,11 +58,19 @@ def preprocess_data(df):
     scaler = MinMaxScaler()
     X_scaled = scaler.fit_transform(X)
     return X_scaled, y, scaler
-    
-X, y, scaler = preprocess_data(df)
 
+X, y, scaler = preprocess_data(df)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
+# Entrenar modelo MLP
+def train_mlp():
+    model = Sequential()
+    model.add(Dense(32, input_shape=(X_train.shape[1],), activation='relu'))
+    model.add(Dense(16, activation='relu'))
+    model.add(Dense(1, activation='sigmoid'))
+    model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+    model.fit(X_train, y_train, epochs=50, batch_size=500, verbose=0)
+    return model
 
 # Mostrar contenido basado en la selección
 if seccion == "Vista previa de los datos":
@@ -210,9 +219,10 @@ elif seccion == "Conclusión: Selección del Mejor Modelo":
     """)
 
 
-elif seccion == "Modelo RandomForest":  
+elif seccion == "Modelo XGBoost":
     st.subheader("Modelo planteado con XGBoost")
-     # Simulación de datos (sustituye esto con tus datos reales)
+
+    # Simulación de datos (sustituye esto con tus datos reales)
     X = df.drop(columns=["Occupancy"], errors='ignore')
     y = df["Occupancy"]
 
@@ -220,37 +230,28 @@ elif seccion == "Modelo RandomForest":
     scaler = MinMaxScaler()
     X_scaled = scaler.fit_transform(X)
     X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
-    def load_model():
-        filename = 'random_forest_model.pkl.gz'
-        with gzip.open(filename, 'rb') as f:
-            model = pickle.load(f)
-        return model
-    model=load_model()
-    
-    st.title("Predicción con Modelo Randomforest")         
-    st.subheader("Hacer una Predicción")
-    def user_input():
-        features = {}
-        for col in df.drop(columns=["Occupancy"], errors='ignore').columns:
-            features[col] = st.slider(col, float(df[col].min()), float(df[col].max()), float(df[col].mean()))
-        return pd.DataFrame([features])
-    
+
+    # Construcción del modelo XGBoost
+    model = XGBClassifier(enable_categorical=True, random_state=42)
+
+    # Entrenamiento del modelo
+    st.write("Entrenando el modelo XGBoost, por favor espera...")
+    model.fit(X_train, y_train)
+
     # Predicciones y evaluación del modelo
     y_pred = model.predict(X_test)
-    occupancy = "Ocupado" if y_pred[0][0] > 0.5 else "No Ocupado"
-    st.write(f"Predicción: {occupancy}")
     accuracy = accuracy_score(y_test, y_pred)
     f1 = f1_score(y_test, y_pred)
     recall = recall_score(y_test, y_pred)
     precision = precision_score(y_test, y_pred)
 
-    st.write("### Métricas de Evaluación")
-    st.write(f"**Accuracy:** {accuracy:.4f}")
-    st.write(f"**F1 Score:** {f1:.4f}")
-    st.write(f"**Recall Score:** {recall:.4f}")
-    st.write(f"**Precision Score:** {precision:.4f}")
+    # Mostrar métricas de evaluación
+    st.write(f'**Accuracy del modelo en datos de prueba:** {round(accuracy * 100, 2)}%')
+    st.write(f'**F1-Score del modelo:** {round(f1, 2)}')
+    st.write(f'**Recall del modelo:** {round(recall, 2)}')
+    st.write(f'**Precision del modelo:** {round(precision, 2)}')
 
-  # Gráfico de importancia de características
+    # Gráfico de importancia de características
     st.subheader("Importancia de las características")
     feat_importances = pd.Series(model.feature_importances_, index=X.columns)
     feat_importances = feat_importances.sort_values(ascending=True)
@@ -261,22 +262,59 @@ elif seccion == "Modelo RandomForest":
     ax.set_xlabel('Importancia')
     ax.set_ylabel('Características')
     st.pyplot(fig)
+    
+elif seccion == "Entrenamiento del Modelo MLP":
+    st.subheader("Entrenamiento del Modelo MLP")
+    if st.button("Entrenar Modelo"):
+        model = train_mlp()
+        st.success("Modelo entrenado con éxito")
+        st.session_state["mlp_model"] = model
 
-
+elif seccion == "Hacer una Predicción":
+    st.subheader("Hacer una Predicción")
+    def user_input():
+        features = {}
+        for col in df.drop(columns=["Occupancy"], errors='ignore').columns:
+            features[col] = st.slider(col, float(df[col].min()), float(df[col].max()), float(df[col].mean()))
+        return pd.DataFrame([features])
+    
+    if "mlp_model" in st.session_state:
+        input_data = user_input()
+        input_scaled = scaler.transform(input_data)
+        prediction = st.session_state["mlp_model"].predict(input_scaled)
+        occupancy = "Ocupado" if prediction[0][0] > 0.5 else "No Ocupado"
+        st.write(f"Predicción: {occupancy}")
 
 elif seccion == "Modelo de redes neuronales":
     st.subheader("Modelo planteado con redes neuronales")
 
-    def load_model():
-        """Cargar el modelo y sus pesos desde el archivo model_weights.pkl."""
-        filename = 'best_model.pkl.gz'
-        with gzip.open(filename, 'rb') as f:
-            model2 = pickle.load(f)
-        return model2
-    model2=load_model()
-    model2.compile(loss='binary_crossentropy', optimizer=Adam(), metrics=['accuracy'])
+    # Simulación de datos (sustituye esto con tus datos reales)
 
-    
+    X = df.drop(columns=["Occupancy"], errors='ignore')
+    y = df["Occupancy"]
+
+    # Preprocesamiento de datos
+    scaler = StandardScaler()
+    X = scaler.fit_transform(X)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+    # Construcción del modelo
+    model = Sequential([
+    Dense(32, input_shape=(X_train.shape[1],), activation='relu'),
+    Dense(16, activation='relu'),
+    Dense(1, activation='sigmoid')
+    ])
+
+    model.compile(loss='binary_crossentropy', optimizer=Adam(), metrics=['accuracy'])
+
+    # Entrenamiento del modelo
+    st.write("Entrenando el modelo, por favor espera...")
+    clf = model.fit(X_train, y_train, epochs=50, batch_size=500, verbose=0)
+
+    # Obtención del historial de entrenamiento
+    accuracy = clf.history['accuracy']
+    loss = clf.history['loss']
+
     # Gráficos de Accuracy y Loss
     fig, axes = plt.subplots(1, 2, figsize=(10, 3))
     sns.lineplot(y=accuracy, x=range(1, len(accuracy) + 1), marker='o', ax=axes[0])
@@ -290,6 +328,4 @@ elif seccion == "Modelo de redes neuronales":
     # Evaluación del modelo
     _, test_accuracy = model.evaluate(X_test, y_test, verbose=0)
     st.write(f'**Accuracy del modelo en datos de prueba:** {round(test_accuracy * 100, 2)}%')
-
-
 
