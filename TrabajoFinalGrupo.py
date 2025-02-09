@@ -248,7 +248,7 @@ elif seccion == "Modelo XGBoost":
             features[col] = st.slider(col, float(df[col].min()), float(df[col].max()), float(df[col].mean()))
         return pd.DataFrame([features])
     
-    y_pred = model.predict(X_test)
+    y_pred = model.predict(X_test_scaled)
     occupancy = "Ocupado" if y_pred[0][0] > 0.5 else "No Ocupado"
     st.write(f"Predicción: {occupancy}")
     accuracy = accuracy_score(y_test, y_pred)
