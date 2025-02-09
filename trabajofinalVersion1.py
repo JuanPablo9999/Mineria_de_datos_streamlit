@@ -216,7 +216,7 @@ elif seccion == "Modelo XGBoost":
         with gzip.open(filename, 'rb') as f:
             model = pickle.load(f)
         return model
-     model = pickle.load(f)
+    model = load_model()
     # Predicciones y evaluación del modelo
     y_pred = model.predict(X_test)
     accuracy = accuracy_score(y_test, y_pred)
