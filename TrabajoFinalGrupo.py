@@ -241,16 +241,6 @@ elif seccion == "Modelo XGBoost":
         st.write(f"**Recall Score:** {recall:.4f}")
         st.write(f"**Precision Score:** {precision:.4f}")
     
-    # Importancia de las características
-    if hasattr(model, "feature_importances_"):
-        feat_importances = pd.Series(model.feature_importances_, index=X_test.columns).sort_values()
-        fig, ax = plt.subplots()
-        feat_importances.plot(kind='barh', ax=ax)
-        ax.set_title("Feature Importance Graph")
-        ax.set_xlabel("Importances")
-        ax.set_ylabel("Features")
-        st.pyplot(fig)
-    
     # Explicabilidad con SHAP
     explainer = shap.Explainer(model)
     shap_values = explainer(X_test)
