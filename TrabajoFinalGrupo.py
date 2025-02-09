@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 import shap
 import xgboost as xgb
 from sklearn.preprocessing import StandardScaler
-
+from sklearn.ensemble import RandomForestClassifier
 
 # Mostrar la imagen solo en la página de inicio
 st.title("Análisis de Detección de Ocupación")
