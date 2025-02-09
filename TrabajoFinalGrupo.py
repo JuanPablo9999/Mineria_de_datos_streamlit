@@ -224,22 +224,21 @@ elif seccion == "Modelo XGBoost":
             features[col] = st.slider(col, float(df[col].min()), float(df[col].max()), float(df[col].mean()))
         return pd.DataFrame([features])
     
-    if "mlp_model" in st.session_state:
-        input_data = user_input()
-        input_scaled = scaler.transform(input_data)
-        y_pred = model.predict(input_scaled)
-        occupancy = "Ocupado" if y_pred[0][0] > 0.5 else "No Ocupado"
-        st.write(f"Predicción: {occupancy}")
-        accuracy = accuracy_score(y_test, y_pred)
-        f1 = f1_score(y_test, y_pred)
-        recall = recall_score(y_test, y_pred)
-        precision = precision_score(y_test, y_pred)
-    
-        st.write("### Métricas de Evaluación")
-        st.write(f"**Accuracy:** {accuracy:.4f}")
-        st.write(f"**F1 Score:** {f1:.4f}")
-        st.write(f"**Recall Score:** {recall:.4f}")
-        st.write(f"**Precision Score:** {precision:.4f}")
+    input_data = user_input()
+    input_scaled = scaler.transform(input_data)
+    y_pred = model.predict(input_scaled)
+    occupancy = "Ocupado" if y_pred[0][0] > 0.5 else "No Ocupado"
+    st.write(f"Predicción: {occupancy}")
+    accuracy = accuracy_score(y_test, y_pred)
+    f1 = f1_score(y_test, y_pred)
+    recall = recall_score(y_test, y_pred)
+    precision = precision_score(y_test, y_pred)
+
+    st.write("### Métricas de Evaluación")
+    st.write(f"**Accuracy:** {accuracy:.4f}")
+    st.write(f"**F1 Score:** {f1:.4f}")
+    st.write(f"**Recall Score:** {recall:.4f}")
+    st.write(f"**Precision Score:** {precision:.4f}")
     
 
 elif seccion == "Modelo de redes neuronales":
