@@ -206,7 +206,18 @@ elif seccion == "Conclusión: Selección del Mejor Modelo":
     El **XGBoost Classifier** fue seleccionado como el mejor modelo debido a su alto rendimiento, capacidad para manejar el desequilibrio de clases, interpretabilidad de las características, eficiencia y robustez ante el overfitting. Estos factores lo convierten en la opción más adecuada para la tarea de predecir la ocupación de habitaciones, superando a otros modelos como Random Forest, Decision Tree, KNN y la red neuronal en este contexto específico.
     """)
 
+# Entrenar modelo MLP
+def train_mlp():
+    st.subheader("Modelo planteado con XGBoost")
+    def load_model():
+        filename = 'xgb_model.pkl.gz'
+        with gzip.open(filename, 'rb') as f:
+            model = pickle.load(f)
+        return model
+    model=load_model()
+
 elif seccion == "Modelo XGBoost":
+    
     st.subheader("Modelo planteado con XGBoost")
     def load_model():
         filename = 'xgb_model.pkl.gz'
@@ -216,29 +227,20 @@ elif seccion == "Modelo XGBoost":
     model=load_model()
 
 # Configuración de la interfaz en Streamlit
-     st.title("Predicción con Modelo XGBoost")         
-# Entrada manual de valores
-  st.subheader("Ingrese los valores para la predicción")
-   n_features = 9#model.get_booster().num_features()
-    user_input = []
-    for i in range(n_features):
-     value = st.number_input(f"Característica {i+1}", value=0.0)
-      user_input.append(value)
-        
-       # Convertir entrada a array numpy
-    input_array = np.array(user_input).reshape(1, -1)
-        
-     #   # Realizar predicción si el usuario lo solicita
-    if st.button("Predecir"):
-     prediction = model.predict(input_array)[0]
-      st.subheader("Resultado de la Predicción")
-       st.write(f"Predicción del modelo: {prediction}")
-
-       
-    # Realizar predicciones
-    y_pred = model.predict(X_test)
-    st.write("Predicciones:")
-    st.dataframe(pd.DataFrame({"Predicción": y_pred}))
+    st.title("Predicción con Modelo XGBoost")         
+    st.subheader("Hacer una Predicción")
+    def user_input():
+        features = {}
+        for col in df.drop(columns=["Occupancy"], errors='ignore').columns:
+            features[col] = st.slider(col, float(df[col].min()), float(df[col].max()), float(df[col].mean()))
+        return pd.DataFrame([features])
+    
+    if "mlp_model" in st.session_state:
+        input_data = user_input()
+        input_scaled = scaler.transform(input_data)
+        y_pred = model.predict(input_scaled)
+        occupancy = "Ocupado" if prediction[0][0] > 0.5 else "No Ocupado"
+        st.write(f"Predicción: {occupancy}")
     
     # Calcular métricas
     accuracy = accuracy_score(y_test, y_pred)
