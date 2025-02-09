@@ -55,15 +55,6 @@ def preprocess_data(df):
 X, y, scaler = preprocess_data(df)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# Entrenar modelo MLP
-def train_mlp():
-    model = Sequential()
-    model.add(Dense(32, input_shape=(X_train.shape[1],), activation='relu'))
-    model.add(Dense(16, activation='relu'))
-    model.add(Dense(1, activation='sigmoid'))
-    model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
-    model.fit(X_train, y_train, epochs=50, batch_size=500, verbose=0)
-    return model
 
 # Mostrar contenido basado en la selección
 if seccion == "Vista previa de los datos":
@@ -211,26 +202,16 @@ elif seccion == "Conclusión: Selección del Mejor Modelo":
     El **XGBoost Classifier** fue seleccionado como el mejor modelo debido a su alto rendimiento, capacidad para manejar el desequilibrio de clases, interpretabilidad de las características, eficiencia y robustez ante el overfitting. Estos factores lo convierten en la opción más adecuada para la tarea de predecir la ocupación de habitaciones, superando a otros modelos como Random Forest, Decision Tree, KNN y la red neuronal en este contexto específico.
     """)
 
-
 elif seccion == "Modelo XGBoost":
     st.subheader("Modelo planteado con XGBoost")
-
-    # Simulación de datos (sustituye esto con tus datos reales)
-    X = df.drop(columns=["Occupancy"], errors='ignore')
-    y = df["Occupancy"]
-
-    # Preprocesamiento de datos
-    scaler = MinMaxScaler()
-    X_scaled = scaler.fit_transform(X)
-    X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
-
-    # Construcción del modelo XGBoost
-    model = XGBClassifier(enable_categorical=True, random_state=42)
-
-    # Entrenamiento del modelo
-    st.write("Entrenando el modelo XGBoost, por favor espera...")
-    model.fit(X_train, y_train)
-
+elif seccion == "Modelo XGBoost":
+    st.subheader("Modelo planteado con XGBoost")
+    def load_model():
+        filename = 'xgb_model.pkl.gz'
+        with gzip.open(filename, 'rb') as f:
+            model = pickle.load(f)
+        return model
+     model = pickle.load(f)
     # Predicciones y evaluación del modelo
     y_pred = model.predict(X_test)
     accuracy = accuracy_score(y_test, y_pred)
