@@ -229,7 +229,7 @@ elif seccion == "Modelo XGBoost":
         input_data = user_input()
         input_scaled = scaler.transform(input_data)
         y_pred = model.predict(input_scaled)
-        occupancy = "Ocupado" if prediction[0][0] > 0.5 else "No Ocupado"
+        occupancy = "Ocupado" if y_pred[0][0] > 0.5 else "No Ocupado"
         st.write(f"Predicción: {occupancy}")
     
     # Calcular métricas
