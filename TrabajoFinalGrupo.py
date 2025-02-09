@@ -35,9 +35,9 @@ seccion = st.sidebar.radio("Tabla de Contenidos",
                             "Mapa de calor de correlaciones", 
                             "Distribución de la variable objetivo", 
                             "Boxplots", 
-                            "Conclusión: Selección del Mejor Modelo",  # Nueva ubicación
-                            "Modelo XGBoost",  # Nueva sección
-                           "Modelo de redes neuronales"])
+                            "Modelo RandomForest",  # Nueva sección
+                           "Modelo de redes neuronales",
+                           "Conclusión: Selección del Mejor Modelo"])
 
 # Cargar los datos
 # Cargar los datos
@@ -210,16 +210,24 @@ elif seccion == "Conclusión: Selección del Mejor Modelo":
     """)
 
 
-elif seccion == "Modelo XGBoost":  
+elif seccion == "Modelo RandomForest":  
     st.subheader("Modelo planteado con XGBoost")
+     # Simulación de datos (sustituye esto con tus datos reales)
+    X = df.drop(columns=["Occupancy"], errors='ignore')
+    y = df["Occupancy"]
+
+    # Preprocesamiento de datos
+    scaler = MinMaxScaler()
+    X_scaled = scaler.fit_transform(X)
+    X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
     def load_model():
-        filename = 'xgb_model.pkl.gz'
+        filename = 'random_forest_model.pkl.gz'
         with gzip.open(filename, 'rb') as f:
             model = pickle.load(f)
         return model
     model=load_model()
     
-    st.title("Predicción con Modelo XGBoost")         
+    st.title("Predicción con Modelo Randomforest")         
     st.subheader("Hacer una Predicción")
     def user_input():
         features = {}
@@ -227,10 +235,8 @@ elif seccion == "Modelo XGBoost":
             features[col] = st.slider(col, float(df[col].min()), float(df[col].max()), float(df[col].mean()))
         return pd.DataFrame([features])
     
-    input_data = user_input()
-    scaler = StandardScaler()
-    input_scaled = scaler.fit_transform(input_data)
-    y_pred = model.predict(input_scaled)
+    # Predicciones y evaluación del modelo
+    y_pred = model.predict(X_test)
     occupancy = "Ocupado" if y_pred[0][0] > 0.5 else "No Ocupado"
     st.write(f"Predicción: {occupancy}")
     accuracy = accuracy_score(y_test, y_pred)
@@ -243,7 +249,20 @@ elif seccion == "Modelo XGBoost":
     st.write(f"**F1 Score:** {f1:.4f}")
     st.write(f"**Recall Score:** {recall:.4f}")
     st.write(f"**Precision Score:** {precision:.4f}")
-    
+
+  # Gráfico de importancia de características
+    st.subheader("Importancia de las características")
+    feat_importances = pd.Series(model.feature_importances_, index=X.columns)
+    feat_importances = feat_importances.sort_values(ascending=True)
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+    feat_importances.plot(kind='barh', ax=ax)
+    ax.set_title('Importancia de las características')
+    ax.set_xlabel('Importancia')
+    ax.set_ylabel('Características')
+    st.pyplot(fig)
+
+
 
 elif seccion == "Modelo de redes neuronales":
     st.subheader("Modelo planteado con redes neuronales")
