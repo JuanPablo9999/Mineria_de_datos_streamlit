@@ -241,16 +241,6 @@ elif seccion == "Modelo XGBoost":
         st.write(f"**Recall Score:** {recall:.4f}")
         st.write(f"**Precision Score:** {precision:.4f}")
     
-    # Explicabilidad con SHAP
-    explainer = shap.Explainer(model)
-    shap_values = explainer(X_test)
-    st.write("### Explicabilidad con SHAP")
-    fig, ax = plt.subplots()
-    shap.summary_plot(shap_values, X_test, show=False)
-    st.pyplot(fig)
-
-
-
 
 elif seccion == "Modelo de redes neuronales":
     st.subheader("Modelo planteado con redes neuronales")
