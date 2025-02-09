@@ -16,7 +16,7 @@ import pickle
 from sklearn.metrics import accuracy_score
 import matplotlib.pyplot as plt
 import shap
-
+import xgboost as xgb
 
 
 # Mostrar la imagen solo en la página de inicio
