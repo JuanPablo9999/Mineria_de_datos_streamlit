@@ -41,6 +41,25 @@ def preprocess_data(df):
 X, y, scaler = preprocess_data(df)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
+# Mostrar la imagen solo en la página de inicio
+st.title("Análisis de Detección de Ocupación")
+st.write("Grupo: Yulisa Ortiz Giraldo y Juan Pablo Noreña Londoño")
+if "image_displayed" not in st.session_state:
+    st.image("image1.jpg", use_container_width=True)
+    st.session_state["image_displayed"] = True  # Marcar que la imagen ya se mostró
+
+# Crear una tabla de contenido en la barra lateral
+seccion = st.sidebar.radio("Tabla de Contenidos", 
+                           ["Vista previa de los datos", 
+                            "Información del dataset", 
+                            "Análisis Descriptivo", 
+                            "Mapa de calor de correlaciones", 
+                            "Distribución de la variable objetivo", 
+                            "Boxplots", 
+                            "Modelo XGBoost",  # Nueva sección
+                           "Modelo de redes neuronales",
+                           "Conclusión: Selección del Mejor Modelo"])
+
 
 # Mostrar contenido basado en la selección
 if seccion == "Vista previa de los datos":
