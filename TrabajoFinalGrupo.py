@@ -54,8 +54,8 @@ df_test = load_data()
 
 def preprocess_data(df,df_test):
     features = ['Temperature', 'Humidity', "HumidityRatio", 'Light', 'CO2']
-    X_train = df_train[features]
-    y_train = df_train['Occupancy']
+    X_train = df[features]
+    y_train = df['Occupancy']
     X_test = df_test[features]
     y_test = df_test['Occupancy']
     scaler = StandardScaler()
