@@ -206,18 +206,8 @@ elif seccion == "Conclusión: Selección del Mejor Modelo":
     El **XGBoost Classifier** fue seleccionado como el mejor modelo debido a su alto rendimiento, capacidad para manejar el desequilibrio de clases, interpretabilidad de las características, eficiencia y robustez ante el overfitting. Estos factores lo convierten en la opción más adecuada para la tarea de predecir la ocupación de habitaciones, superando a otros modelos como Random Forest, Decision Tree, KNN y la red neuronal en este contexto específico.
     """)
 
-# Entrenar modelo MLP
-def train_mlp():
-    st.subheader("Modelo planteado con XGBoost")
-    def load_model():
-        filename = 'xgb_model.pkl.gz'
-        with gzip.open(filename, 'rb') as f:
-            model = pickle.load(f)
-        return model
-    model=load_model()
 
-elif seccion == "Modelo XGBoost":
-    
+elif seccion == "Modelo XGBoost":  
     st.subheader("Modelo planteado con XGBoost")
     def load_model():
         filename = 'xgb_model.pkl.gz'
