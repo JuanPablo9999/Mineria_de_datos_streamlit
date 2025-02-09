@@ -206,7 +206,6 @@ elif seccion == "Conclusión: Selección del Mejor Modelo":
     El **XGBoost Classifier** fue seleccionado como el mejor modelo debido a su alto rendimiento, capacidad para manejar el desequilibrio de clases, interpretabilidad de las características, eficiencia y robustez ante el overfitting. Estos factores lo convierten en la opción más adecuada para la tarea de predecir la ocupación de habitaciones, superando a otros modelos como Random Forest, Decision Tree, KNN y la red neuronal en este contexto específico.
     """)
 
-
 elif seccion == "Modelo XGBoost":
     st.subheader("Modelo planteado con XGBoost")
     def load_model():
@@ -216,25 +215,24 @@ elif seccion == "Modelo XGBoost":
         return model
     model=load_model()
 
-#     # Configuración de la interfaz en Streamlit
- #   st.title("Predicción con Modelo XGBoost")
-            
-        # Entrada manual de valores
-  #  st.subheader("Ingrese los valores para la predicción")
-   # n_features = 9#model.get_booster().num_features()
-    #user_input = []
-    #for i in range(n_features):
-     #   value = st.number_input(f"Característica {i+1}", value=0.0)
-      #  user_input.append(value)
+# Configuración de la interfaz en Streamlit
+     st.title("Predicción con Modelo XGBoost")         
+# Entrada manual de valores
+  st.subheader("Ingrese los valores para la predicción")
+   n_features = 9#model.get_booster().num_features()
+    user_input = []
+    for i in range(n_features):
+     value = st.number_input(f"Característica {i+1}", value=0.0)
+      user_input.append(value)
         
-       # # Convertir entrada a array numpy
-    #input_array = np.array(user_input).reshape(1, -1)
+       # Convertir entrada a array numpy
+    input_array = np.array(user_input).reshape(1, -1)
         
      #   # Realizar predicción si el usuario lo solicita
-    #if st.button("Predecir"):
-     #   prediction = model.predict(input_array)[0]
-      #  st.subheader("Resultado de la Predicción")
-       # st.write(f"Predicción del modelo: {prediction}")
+    if st.button("Predecir"):
+     prediction = model.predict(input_array)[0]
+      st.subheader("Resultado de la Predicción")
+       st.write(f"Predicción del modelo: {prediction}")
 
        
     # Realizar predicciones
