@@ -231,6 +231,7 @@ elif seccion == "Modelo XGBoost":
     scaler = MinMaxScaler()
     X_scaled = scaler.fit_transform(X)
     X_test_scaled = scaler.transform(X_test)
+    X_test_scaled = np.array(X_test_scaled)
     X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
 
     def load_model():
