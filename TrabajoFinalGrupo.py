@@ -36,7 +36,8 @@ def preprocess_data(df):
     y = df["Occupancy"]
     scaler = MinMaxScaler()
     X_scaled = scaler.fit_transform(X)
-    return X_scaled, y, scaler
+    X_test_scaled = scaler.transform(X_test)
+    return X_scaled, y, scaler, X_test_scaled
 
 X, y, scaler = preprocess_data(df)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
@@ -215,6 +216,7 @@ elif seccion == "Modelo XGBoost":
     y = df["Occupancy"]
     scaler = MinMaxScaler()
     X_scaled = scaler.fit_transform(X)
+    X_test_scaled = scaler.transform(X_test)
     X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
 
     def load_model():
