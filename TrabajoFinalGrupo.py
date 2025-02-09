@@ -49,8 +49,8 @@ df,df_test = load_data()
 
 features = ['Temperature', 'Humidity', 'Light', 'CO2']
 X_train = df[features]
-y_train = df_train['Occupancy']
-X_test = df[features]
+y_train = df['Occupancy']
+X_test = df_test[features]
 y_test = df_test['Occupancy']
 
 # Preprocesamiento
