@@ -226,7 +226,7 @@ elif seccion == "Modelo XGBoost":
         return pd.DataFrame([features])
     
     input_data = user_input()
-
+    scaler = StandardScaler()
     input_scaled = scaler.fit_transform(input_data)
     y_pred = model.predict(input_scaled)
     occupancy = "Ocupado" if y_pred[0][0] > 0.5 else "No Ocupado"
