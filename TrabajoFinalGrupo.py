@@ -41,25 +41,24 @@ seccion = st.sidebar.radio("Tabla de Contenidos",
 
 # Cargar los datos
 def load_data():
-    df = pd.read_csv("https://raw.githubusercontent.com/JuanPablo9999/Mineria_de_datos_streamlit/main/datatrain.csv")
+    df_train = pd.read_csv("https://raw.githubusercontent.com/JuanPablo9999/Mineria_de_datos_streamlit/main/datatrain.csv")
     df_test = pd.read_csv("https://raw.githubusercontent.com/JuanPablo9999/Mineria_de_datos_streamlit/main/datatest.csv")
+    df = pd.concat([df_train, df_test], axis=0)
     df.drop(columns=["id", "date"], inplace=True, errors='ignore')
-    df_test.drop(columns=["id", "date"], inplace=True, errors='ignore')
-    return df, df_test
-df,df_test = load_data()
-
-features = ['Temperature', 'Humidity', 'Light', 'CO2']
-X_train = df[features]
-y_train = df['Occupancy']
-X_test = df_test[features]
-y_test = df_test['Occupancy']
+    return df
+df = load_data()
 
 # Preprocesamiento
-def preprocess_data(df,df_test):
-    scaler = StandardScaler()
-    X_train_scaled = scaler.fit_transform(X_train)
-    X_test_scaled = scaler.transform(X_test)
-    return scaler, X_train_scaled, X_test_scaled
+def preprocess_data(df):
+    X = df.drop(columns=["Occupancy"], errors='ignore')
+    y = df["Occupancy"]
+    scaler = MinMaxScaler()
+    X_scaled = scaler.fit_transform(X)
+    return X_scaled, y, scaler
+
+X, y, scaler = preprocess_data(df)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
 
 # Mostrar contenido basado en la selección
 if seccion == "Vista previa de los datos":
