@@ -230,19 +230,16 @@ elif seccion == "Modelo XGBoost":
         y_pred = model.predict(input_scaled)
         occupancy = "Ocupado" if y_pred[0][0] > 0.5 else "No Ocupado"
         st.write(f"Predicción: {occupancy}")
-    return y_pred
-    y_pred=load_data()
-    # Calcular métricas
-    accuracy = accuracy_score(y_test, y_pred)
-    f1 = f1_score(y_test, y_pred)
-    recall = recall_score(y_test, y_pred)
-    precision = precision_score(y_test, y_pred)
+        accuracy = accuracy_score(y_test, y_pred)
+        f1 = f1_score(y_test, y_pred)
+        recall = recall_score(y_test, y_pred)
+        precision = precision_score(y_test, y_pred)
     
-    st.write("### Métricas de Evaluación")
-    st.write(f"**Accuracy:** {accuracy:.4f}")
-    st.write(f"**F1 Score:** {f1:.4f}")
-    st.write(f"**Recall Score:** {recall:.4f}")
-    st.write(f"**Precision Score:** {precision:.4f}")
+        st.write("### Métricas de Evaluación")
+        st.write(f"**Accuracy:** {accuracy:.4f}")
+        st.write(f"**F1 Score:** {f1:.4f}")
+        st.write(f"**Recall Score:** {recall:.4f}")
+        st.write(f"**Precision Score:** {precision:.4f}")
     
     # Importancia de las características
     if hasattr(model, "feature_importances_"):
