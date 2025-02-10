@@ -235,8 +235,7 @@ elif seccion == "Modelo XGBoost":
     X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
     X_test = np.array(X_test)
     y_test = np.array(y_test)
-    y_test = y_test.reshape(-1, 1)
-    if isinstance(X_test_scaled, pd.DataFrame):
+     if isinstance(X_test_scaled, pd.DataFrame):
       X_test_scaled = X_test_scaled.to_numpy()
         
     def load_model():
@@ -254,8 +253,8 @@ elif seccion == "Modelo XGBoost":
             features[col] = st.slider(col, float(df[col].min()), float(df[col].max()), float(df[col].mean()))
         return pd.DataFrame([features])
 
-    
-    
+    y_test = y_test.reshape(-1, 1)
+    X_test_scaled = X_test_scaled.reshape(-1, 1)
     y_pred = model.predict(X_test_scaled)
     occupancy = "Ocupado" if y_pred[0][0] > 0.5 else "No Ocupado"
     st.write(f"Predicción: {occupancy}")
