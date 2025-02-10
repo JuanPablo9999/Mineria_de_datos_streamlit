@@ -275,8 +275,7 @@ elif seccion == "Modelo de redes neuronales":
     st.subheader("Modelo planteado con redes neuronales")
     X_test = np.array(X_test)
     y_test = np.array(y_test)
-    X_test = X_test.astype(np.float32)
-    y_test = y_test.astype(np.float32)
+  
     def load_model():
         """Cargar el modelo y sus pesos desde el archivo model_weights.pkl."""
         filename = 'best_model.pkl.gz'
