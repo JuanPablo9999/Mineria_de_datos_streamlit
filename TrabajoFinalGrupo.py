@@ -233,7 +233,9 @@ elif seccion == "Modelo XGBoost":
     X_test_scaled = scaler.transform(X_test)
     X_test_scaled = np.array(X_test_scaled)
     X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
-
+    X_test = np.array(X_test)
+    y_test = np.array(y_test)
+    y_test = y_test.reshape(-1, 1)
     def load_model():
         filename = 'xgb_model.pkl.gz'
         with gzip.open(filename, 'rb') as f:
@@ -248,6 +250,8 @@ elif seccion == "Modelo XGBoost":
         for col in df.drop(columns=["Occupancy"], errors='ignore').columns:
             features[col] = st.slider(col, float(df[col].min()), float(df[col].max()), float(df[col].mean()))
         return pd.DataFrame([features])
+
+    
     
     y_pred = model.predict(X_test_scaled)
     occupancy = "Ocupado" if y_pred[0][0] > 0.5 else "No Ocupado"
