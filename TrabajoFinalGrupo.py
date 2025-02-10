@@ -289,7 +289,7 @@ elif seccion == "Modelo de redes neuronales":
     st.pyplot(fig)
 
     # Evaluación del modelo
-    _, test_accuracy = model.evaluate(X_test, y_test, verbose=0)
+    _, test_accuracy = model2.evaluate(X_test, y_test, verbose=0)
     st.write(f'**Accuracy del modelo en datos de prueba:** {round(test_accuracy * 100, 2)}%')
 
 
