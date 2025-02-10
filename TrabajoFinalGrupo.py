@@ -19,7 +19,7 @@ import shap
 import xgboost as xgb
 from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import RandomForestClassifier
-
+loss = []
 accuracy = []
 # Cargar los datos
 def load_data():
