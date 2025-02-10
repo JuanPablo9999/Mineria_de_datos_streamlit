@@ -267,6 +267,8 @@ elif seccion == "Modelo XGBoost":
 
 elif seccion == "Modelo de redes neuronales":
     st.subheader("Modelo planteado con redes neuronales")
+    X_test = np.array(X_test)
+    y_test = np.array(y_test)
 
     def load_model():
         """Cargar el modelo y sus pesos desde el archivo model_weights.pkl."""
