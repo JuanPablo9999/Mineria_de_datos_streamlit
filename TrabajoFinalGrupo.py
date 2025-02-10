@@ -235,7 +235,7 @@ elif seccion == "Modelo XGBoost":
     X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
     X_test = np.array(X_test)
     y_test = np.array(y_test)
-     if isinstance(X_test_scaled, pd.DataFrame):
+    if isinstance(X_test_scaled, pd.DataFrame):
       X_test_scaled = X_test_scaled.to_numpy()
         
     def load_model():
