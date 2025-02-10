@@ -236,6 +236,8 @@ elif seccion == "Modelo XGBoost":
     X_test = np.array(X_test)
     y_test = np.array(y_test)
     y_test = y_test.reshape(-1, 1)
+    if isinstance(X_test_scaled, pd.DataFrame):
+    X_test_scaled = X_test_scaled.to_numpy()
     def load_model():
         filename = 'xgb_model.pkl.gz'
         with gzip.open(filename, 'rb') as f:
